@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->float('capacity'); // Ємність (Вт·год)
             $table->integer('voltage'); // Напруга (В)
+            $table->string('url');
+            $table->string('image');
             $table->timestamps();
         });
     }

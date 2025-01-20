@@ -16,6 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->float('max_current'); // Макс. струм (А)
             $table->float('power_rating'); // Потужність (Вт)
+            $table->string('url');
+            $table->string('image');
             $table->timestamps();
         });
     }

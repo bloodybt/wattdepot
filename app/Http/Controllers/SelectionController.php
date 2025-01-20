@@ -13,7 +13,9 @@ class SelectionController extends Controller
     {
         $consumptionPower = $request->input('consumptionPower');
         $operationTime = $request->input('operationTime');
-
+        if($consumptionPower <= 0 || $operationTime <= 0){
+            return redirect()->route('home')->with('error', 'Занадто маленькі числа.');
+        }
         // 1. Підбір інвертора
         $inverter = $this->selectInverter($consumptionPower);
         if (!$inverter) {
@@ -43,7 +45,7 @@ class SelectionController extends Controller
     }
 
     // Функція для підбору інвертора
-    private function selectInverter($consumptionPower)
+    public function selectInverter($consumptionPower)
     {
         // Запас по потужності 20%
         $consumptionPower = $consumptionPower * 1.2;
@@ -54,7 +56,7 @@ class SelectionController extends Controller
     }
 
     // Функція для підбору батареї
-    private function selectBattery($inverter, $consumptionPower, $operationTime)
+    public function selectBattery($inverter, $consumptionPower, $operationTime)
     {
         $requiredCapacity = $this->calculateBatteryCapacity($consumptionPower, $operationTime, $inverter);
 
@@ -65,13 +67,13 @@ class SelectionController extends Controller
     }
 
     // Функція для обчислення ємності батареї
-    private function calculateBatteryCapacity($consumptionPower, $operationTime, $inverter)
+    public function calculateBatteryCapacity($consumptionPower, $operationTime, $inverter)
     {
         return round(($consumptionPower * $operationTime) / $inverter->voltage); // в А*год
     }
 
     // Функція для підбору кабеля
-    private function selectCable($inverter, $consumptionPower)
+    public function selectCable($inverter, $consumptionPower)
     {
         $maxCurrent = $consumptionPower / $inverter->voltage;
 
@@ -80,4 +82,5 @@ class SelectionController extends Controller
             ->orderBy('power_rating')
             ->first();
     }
+
 }
